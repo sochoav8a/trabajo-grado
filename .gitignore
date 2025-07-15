@@ -1,3 +1,30 @@
 dataset/
 
 dataset.zip
+
+# Archivos generados durante el análisis y procesamiento
+*.png
+*.npz
+*.json
+
+# Archivos de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Archivos de modelos
+*.h5
+*.pkl
+*.joblib
+
+# Logs y archivos temporales
+*.log
+.DS_Store
+.vscode/
+.idea/
