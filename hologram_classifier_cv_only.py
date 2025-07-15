@@ -246,7 +246,7 @@ def main():
         y_all=y_all
     )
     
-    print("\n💾 Resultados guardados en 'cv_only_results.npz'")
+    print("\n💾 Resultados guardados en 'cv_only_results.npz'") 
 
 if __name__ == "__main__":
     main() 
