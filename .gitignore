@@ -6,9 +6,14 @@ dataset.zip
 *.png
 *.npz
 *.json
-
+*.csv
+*.pth	
+*.pt
+best_model.pth
+CNN_Ligera_pytorch.pth
+Feature_based_pytorch.pth
 # Archivos de Python
-__pycache__/
+__pycache__/    
 *.pyc
 *.pyo
 *.pyd
