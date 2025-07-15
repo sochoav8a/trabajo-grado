@@ -209,7 +209,7 @@ def main():
     
     # 5. Resumen final
     print("\n" + "="*60)
-    print("📊 RESUMEN FINAL")
+    print("RESUMEN FINAL")
     print("="*60)
     
     # Ordenar por AUC de test
@@ -247,8 +247,6 @@ def main():
     )
     
     print("\n💾 Resultados guardados en 'cv_only_results.npz'")
-    print("\n⚠️  NOTA: Estos resultados son más confiables que usar un test set")
-    print("    pequeño, pero el dataset sigue siendo muy limitado (196 imágenes).")
 
 if __name__ == "__main__":
     main() 
