@@ -35,14 +35,14 @@ class HologramDatasetAnalyzer:
         
     def load_image_info(self):
         """Cargar información básica de todas las imágenes"""
-        print("📊 Cargando información del dataset...")
+        print("Cargando información del dataset...")
         
         image_info = []
         for class_name in self.classes:
             class_path = self.class_paths[class_name]
             image_files = list(class_path.glob("*.png"))
             
-            print(f"   └─ {class_name}: {len(image_files)} imágenes")
+            print(f"   -> {class_name}: {len(image_files)} imágenes")
             
             for img_path in image_files:
                 # Información básica del archivo
@@ -68,7 +68,7 @@ class HologramDatasetAnalyzer:
     
     def basic_statistics(self):
         """Estadísticas básicas del dataset"""
-        print("\n📈 ESTADÍSTICAS BÁSICAS DEL DATASET")
+        print("\nESTADÍSTICAS BÁSICAS DEL DATASET")
         print("=" * 50)
         
         # Resumen por clase
@@ -94,7 +94,7 @@ class HologramDatasetAnalyzer:
     
     def visualize_samples(self, samples_per_class=4):
         """Visualizar muestras de cada clase"""
-        print(f"\n🖼️  Visualizando {samples_per_class} muestras por clase...")
+        print(f"\nVisualizando {samples_per_class} muestras por clase...")
         
         fig, axes = plt.subplots(2, samples_per_class, figsize=(20, 10))
         fig.suptitle('Muestras del Dataset de Hologramas', fontsize=16, fontweight='bold')
@@ -125,7 +125,7 @@ class HologramDatasetAnalyzer:
     
     def analyze_pixel_distributions(self, sample_size=5):
         """Analizar distribuciones de píxeles"""
-        print(f"\n📊 Analizando distribuciones de píxeles (muestra de {sample_size} por clase)...")
+        print(f"\nAnalizando distribuciones de píxeles (muestra de {sample_size} por clase)...")
         
         pixel_data = {class_name: [] for class_name in self.classes}
         
@@ -201,7 +201,7 @@ class HologramDatasetAnalyzer:
     
     def analyze_textures(self, sample_size=3):
         """Análisis de texturas usando Local Binary Patterns"""
-        print(f"\n🔍 Analizando texturas (muestra de {sample_size} por clase)...")
+        print(f"\nAnalizando texturas (muestra de {sample_size} por clase)...")
         
         texture_features = {class_name: [] for class_name in self.classes}
         
@@ -244,7 +244,7 @@ class HologramDatasetAnalyzer:
     
     def hologram_specific_analysis(self, sample_size=2):
         """Análisis específico para hologramas: patrones de interferencia"""
-        print(f"\n🌊 Análisis específico de hologramas (muestra de {sample_size} por clase)...")
+        print(f"\nAnálisis específico de hologramas (muestra de {sample_size} por clase)...")
         
         fig, axes = plt.subplots(2, sample_size * 3, figsize=(18, 8))
         fig.suptitle('Análisis Específico de Hologramas', fontsize=16, fontweight='bold')
@@ -291,7 +291,7 @@ class HologramDatasetAnalyzer:
     
     def generate_report(self):
         """Generar reporte completo del análisis"""
-        print("\n📋 REPORTE COMPLETO DEL ANÁLISIS")
+        print("\nREPORTE COMPLETO DEL ANÁLISIS")
         print("=" * 60)
         
         total_images = len(self.image_df)
@@ -300,26 +300,26 @@ class HologramDatasetAnalyzer:
         
         report = f"""
 RESUMEN EJECUTIVO DEL DATASET
-════════════════════════════════════════════════════════════
+============================================================
 
-📊 COMPOSICIÓN DEL DATASET:
-   • Total de imágenes: {total_images}
-   • Células SCD (enfermas): {scd_count} ({scd_count/total_images*100:.1f}%)
-   • Células Healthy (sanas): {healthy_count} ({healthy_count/total_images*100:.1f}%)
-   • Balance del dataset: {'✅ Balanceado' if abs(scd_count - healthy_count) < 20 else '⚠️ Desbalanceado'}
+COMPOSICIÓN DEL DATASET:
+   - Total de imágenes: {total_images}
+   - Células SCD (enfermas): {scd_count} ({scd_count/total_images*100:.1f}%)
+   - Células Healthy (sanas): {healthy_count} ({healthy_count/total_images*100:.1f}%)
+   - Balance del dataset: {'Balanceado' if abs(scd_count - healthy_count) < 20 else 'Desbalanceado'}
 
-🖼️ CARACTERÍSTICAS TÉCNICAS:
-   • Resolución: {self.image_df['alto'].iloc[0]} x {self.image_df['ancho'].iloc[0]} píxeles
-   • Formato: PNG a color (3 canales)
-   • Tamaño promedio: {self.image_df['tamaño_mb'].mean():.1f} MB por imagen
-   • Espacio total: {self.image_df['tamaño_mb'].sum():.1f} MB
+CARACTERÍSTICAS TÉCNICAS:
+   - Resolución: {self.image_df['alto'].iloc[0]} x {self.image_df['ancho'].iloc[0]} píxeles
+   - Formato: PNG a color (3 canales)
+   - Tamaño promedio: {self.image_df['tamaño_mb'].mean():.1f} MB por imagen
+   - Espacio total: {self.image_df['tamaño_mb'].sum():.1f} MB
 
-🔍 DESAFÍOS IDENTIFICADOS:
-   • Dataset pequeño ({total_images} imágenes) → Alto riesgo de overfitting
-   • Alta resolución → Necesidad de optimización computacional
-   • Imágenes holográficas → Requiere preprocesamiento especializado
+DESAFÍOS IDENTIFICADOS:
+   - Dataset pequeño ({total_images} imágenes) -> Alto riesgo de overfitting
+   - Alta resolución -> Necesidad de optimización computacional
+   - Imágenes holográficas -> Requiere preprocesamiento especializado
 
-💡 RECOMENDACIONES PARA EL CLASIFICADOR:
+RECOMENDACIONES PARA EL CLASIFICADOR:
    1. Data Augmentation agresiva (rotaciones, flips, variaciones de contraste)
    2. Transfer Learning con modelos pre-entrenados
    3. Validación cruzada estratificada
@@ -327,7 +327,7 @@ RESUMEN EJECUTIVO DEL DATASET
    5. Early stopping para prevenir overfitting
    6. Ensemble de modelos para mayor robustez
 
-🚀 PRÓXIMOS PASOS:
+PRÓXIMOS PASOS:
    1. Implementar pipeline de preprocesamiento
    2. Desarrollar estrategias de data augmentation
    3. Extraer características específicas de hologramas
@@ -344,7 +344,7 @@ RESUMEN EJECUTIVO DEL DATASET
 
 def main():
     """Función principal para ejecutar todo el análisis"""
-    print("🔬 ANÁLISIS EXPLORATORIO DEL DATASET DE HOLOGRAMAS")
+    print("ANÁLISIS EXPLORATORIO DEL DATASET DE HOLOGRAMAS")
     print("=" * 60)
     
     # Inicializar analizador
@@ -359,13 +359,13 @@ def main():
     analyzer.hologram_specific_analysis()
     analyzer.generate_report()
     
-    print("\n✅ Análisis completo terminado!")
-    print("📁 Archivos generados:")
-    print("   • dataset_samples.png")
-    print("   • pixel_distribution_analysis.png")
-    print("   • texture_analysis.png")
-    print("   • hologram_specific_analysis.png")
-    print("   • dataset_analysis_report.txt")
+    print("\nAnálisis completo terminado!")
+    print("Archivos generados:")
+    print("   - dataset_samples.png")
+    print("   - pixel_distribution_analysis.png")
+    print("   - texture_analysis.png")
+    print("   - hologram_specific_analysis.png")
+    print("   - dataset_analysis_report.txt")
 
 if __name__ == "__main__":
     main() 

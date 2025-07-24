@@ -253,7 +253,7 @@ class HologramPreprocessor:
         Returns:
             Diccionario con datos preprocesados
         """
-        print("🔄 Cargando y preprocesando dataset...")
+        print("Cargando y preprocesando dataset...")
         
         # Cargar rutas de archivos y etiquetas
         image_paths = []
@@ -266,7 +266,7 @@ class HologramPreprocessor:
             class_path = dataset_path_obj / class_name
             if class_path.exists():
                 image_files = list(class_path.glob("*.png"))
-                print(f"   └─ {class_name}: {len(image_files)} imágenes")
+                print(f"   -> {class_name}: {len(image_files)} imágenes")
                 
                 for img_path in image_files:
                     image_paths.append(str(img_path))
@@ -281,18 +281,18 @@ class HologramPreprocessor:
             random_state=random_state, stratify=labels_encoded
         )
         
-        print(f"\n📊 División del dataset:")
-        print(f"   • Entrenamiento: {len(X_train_paths)} imágenes")
-        print(f"   • Prueba: {len(X_test_paths)} imágenes")
+        print(f"\nDivisión del dataset:")
+        print(f"   - Entrenamiento: {len(X_train_paths)} imágenes")
+        print(f"   - Prueba: {len(X_test_paths)} imágenes")
         
         # Preprocesar imágenes
-        print("\n🔄 Preprocesando imágenes...")
+        print("\nPreprocesando imágenes...")
         
         X_train = []
         X_test = []
         
         # Procesar conjunto de entrenamiento
-        print("   └─ Procesando conjunto de entrenamiento...")
+        print("   -> Procesando conjunto de entrenamiento...")
         for i, path in enumerate(X_train_paths):
             if i % 20 == 0:
                 print(f"      Progreso: {i+1}/{len(X_train_paths)}")
@@ -300,7 +300,7 @@ class HologramPreprocessor:
             X_train.append(processed_img)
         
         # Procesar conjunto de prueba
-        print("   └─ Procesando conjunto de prueba...")
+        print("   -> Procesando conjunto de prueba...")
         for i, path in enumerate(X_test_paths):
             if i % 10 == 0:
                 print(f"      Progreso: {i+1}/{len(X_test_paths)}")
@@ -331,11 +331,11 @@ class HologramPreprocessor:
             'hologram_enhancement': apply_hologram_enhancement
         }
         
-        print(f"\n✅ Preprocesamiento completado!")
-        print(f"   • Forma X_train: {X_train.shape}")
-        print(f"   • Forma X_test: {X_test.shape}")
-        print(f"   • Forma y_train: {y_train.shape}")
-        print(f"   • Forma y_test: {y_test.shape}")
+        print(f"\nPreprocesamiento completado!")
+        print(f"   - Forma X_train: {X_train.shape}")
+        print(f"   - Forma X_test: {X_test.shape}")
+        print(f"   - Forma y_train: {y_train.shape}")
+        print(f"   - Forma y_test: {y_test.shape}")
         
         return {
             'X_train': X_train,
@@ -356,7 +356,7 @@ class HologramPreprocessor:
             original_img_path: Ruta de una imagen original
             save_path: Ruta donde guardar la comparación
         """
-        print("🖼️ Generando visualización de efectos de preprocesamiento...")
+        print("Generando visualización de efectos de preprocesamiento...")
         
         # Cargar imagen original
         original_img = cv2.imread(original_img_path)
@@ -411,7 +411,7 @@ class HologramPreprocessor:
         plt.savefig(save_path, dpi=150, bbox_inches='tight')
         plt.show()
         
-        print(f"✅ Visualización guardada en: {save_path}")
+        print(f"Visualización guardada en: {save_path}")
     
     def save_preprocessing_config(self, filepath: str = "preprocessing_config.json"):
         """
@@ -428,13 +428,13 @@ class HologramPreprocessor:
         with open(filepath, 'w') as f:
             json.dump(config, f, indent=2)
         
-        print(f"💾 Configuración guardada en: {filepath}")
+        print(f"Configuración guardada en: {filepath}")
 
 def main():
     """
     Función principal para demostrar el pipeline de preprocesamiento
     """
-    print("🔬 PIPELINE DE PREPROCESAMIENTO PARA HOLOGRAMAS")
+    print("PIPELINE DE PREPROCESAMIENTO PARA HOLOGRAMAS")
     print("=" * 60)
     
     # Inicializar preprocesador
@@ -449,7 +449,7 @@ def main():
     )
     
     # Describe
-    print("\n ESTADÍSTICAS DEL DATASET PREPROCESADO:")
+    print("\nESTADÍSTICAS DEL DATASET PREPROCESADO:")
     print("=" * 50)
     stats = dataset['preprocessing_stats']
     print(f"Tamaño objetivo: {stats['target_size']}")
@@ -472,7 +472,7 @@ def main():
     preprocessor.save_preprocessing_config()
     
     # Guardar dataset preprocesado
-    print("\n Guardando dataset preprocesado...")
+    print("\nGuardando dataset preprocesado...")
     np.savez_compressed(
         'preprocessed_dataset.npz',
         X_train=dataset['X_train'],
@@ -481,12 +481,12 @@ def main():
         y_test=dataset['y_test']
     )
     
-    print("✅ Pipeline de preprocesamiento completado!")
-    print("📁 Archivos generados:")
-    print("   • preprocessing_example_1.png")
-    print("   • preprocessing_example_2.png") 
-    print("   • preprocessing_config.json")
-    print("   • preprocessed_dataset.npz")
+    print("Pipeline de preprocesamiento completado!")
+    print("Archivos generados:")
+    print("   - preprocessing_example_1.png")
+    print("   - preprocessing_example_2.png") 
+    print("   - preprocessing_config.json")
+    print("   - preprocessed_dataset.npz")
 
 if __name__ == "__main__":
     main() 

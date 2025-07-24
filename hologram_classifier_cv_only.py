@@ -164,7 +164,7 @@ def evaluate_models_cv_only(X_features, y, n_splits=10, n_repeats=5):
 
 def analyze_feature_importance(X_features, y):
     """Analiza qué características son más informativas"""
-    print("\n🔬 Análisis de características...")
+    print("\nAnálisis de características...")
     
     extractor = MinimalFeatureExtractor()
     feature_names = ['mean', 'std', 'median', 'hist_0', 'hist_1', 'hist_2', 'hist_3', 'lbp_std']
@@ -243,7 +243,7 @@ def main():
         y_all=y_all
     )
     
-    print("\n💾 Resultados guardados en 'cv_only_results.npz'") 
+    print("\nResultados guardados en 'cv_only_results.npz'") 
 
 if __name__ == "__main__":
     main() 
