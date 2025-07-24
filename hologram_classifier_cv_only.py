@@ -20,10 +20,9 @@ import warnings
 warnings.filterwarnings('ignore')
 
 class MinimalFeatureExtractor:
-    """Extractor minimalista para máxima generalización"""
     
     def extract_features(self, image):
-        """Extrae solo características muy básicas"""
+
         features = []
         
         # Convertir a escala de grises
@@ -32,26 +31,24 @@ class MinimalFeatureExtractor:
         else:
             gray = (image * 255).astype(np.uint8)
             
-        # 1. Solo 3 estadísticas básicas
+        # describe
+        
         features.extend([
             np.mean(gray),
             np.std(gray),
             np.median(gray)
         ])
-        
-        # 2. Histograma muy simplificado (4 bins)
+
         hist, _ = np.histogram(gray, bins=4, range=(0, 256), density=True)
         features.extend(hist)
         
-        # 3. Un solo valor de textura
         lbp = local_binary_pattern(gray, 8, 1, method='uniform')
         features.append(np.std(lbp))
         
         return np.array(features)
 
 def load_all_data():
-    """Carga TODOS los datos disponibles sin separar test"""
-    print("\n📂 Cargando todos los datos disponibles...")
+    print("\n Cargando todos los datos disponibles...")
     
     # Cargar datos preprocesados
     data = np.load('preprocessed_dataset.npz')
@@ -73,10 +70,11 @@ def load_all_data():
 def evaluate_models_cv_only(X_features, y, n_splits=10, n_repeats=5):
     """Evaluación exhaustiva solo con validación cruzada"""
     
-    print(f"\n🔍 Evaluación con {n_repeats}x{n_splits}-fold CV ({n_repeats*n_splits} evaluaciones)...")
+    print(f"\n Evaluación con {n_repeats}x{n_splits}-fold CV ({n_repeats*n_splits} evaluaciones)...")
     
-    # Modelos ultra-simples con máxima regularización
+
     models = {
+        #ARBOL POCO PROFUNDO 
         'decision_tree_depth2': DecisionTreeClassifier(
             max_depth=2,  # Árbol muy superficial
             min_samples_leaf=10,  # Muchas muestras por hoja
@@ -88,6 +86,7 @@ def evaluate_models_cv_only(X_features, y, n_splits=10, n_repeats=5):
             solver='liblinear',
             random_state=42
         ),
+        #RANDOM TINI
         'rf_tiny': RandomForestClassifier(
             n_estimators=10,  # Muy pocos árboles
             max_depth=2,
@@ -95,38 +94,38 @@ def evaluate_models_cv_only(X_features, y, n_splits=10, n_repeats=5):
             max_features=2,  # Pocas características por split
             random_state=42
         ),
+        # SUPORT VECTOR MACHINE
         'svm_linear_c001': SVC(
             kernel='linear',
-            C=0.001,  # Regularización extrema
+            C=0.001,  # REEEEE REGULARIZADO
             probability=True,
             random_state=42
         )
     }
     
-    # Crear pipeline con selección de características
+
     results = {}
     
     for name, model in models.items():
-        print(f"\n📊 Evaluando {name}...")
+        print(f"\n Evaluando {name}...")
         
-        # Pipeline con selección mínima de características
+
         pipeline = Pipeline([
-            ('selector', SelectKBest(f_classif, k=5)),  # Solo 5 características
+            ('selector', SelectKBest(f_classif, k=5)),  
             ('scaler', StandardScaler()),
             ('model', model)
         ])
         
-        # Validación cruzada repetida estratificada
+        #VALIDACION CLUZADA
         cv = RepeatedStratifiedKFold(n_splits=n_splits, n_repeats=n_repeats, random_state=42)
         
-        # Métricas múltiples
+        
         scoring = {
             'roc_auc': 'roc_auc',
             'balanced_accuracy': make_scorer(balanced_accuracy_score),
             'accuracy': 'accuracy'
         }
-        
-        # Evaluar
+
         cv_results = cross_validate(
             pipeline, X_features, y,
             cv=cv,
@@ -135,7 +134,7 @@ def evaluate_models_cv_only(X_features, y, n_splits=10, n_repeats=5):
             n_jobs=-1
         )
         
-        # Calcular estadísticas
+        # describe pero con más pasos
         results[name] = {
             'test_auc_mean': np.mean(cv_results['test_roc_auc']),
             'test_auc_std': np.std(cv_results['test_roc_auc']),
@@ -147,13 +146,13 @@ def evaluate_models_cv_only(X_features, y, n_splits=10, n_repeats=5):
             'overfit_score': np.mean(cv_results['train_roc_auc']) - np.mean(cv_results['test_roc_auc'])
         }
         
-        # Mostrar resultados
+
         print(f"   Test AUC: {results[name]['test_auc_mean']:.3f} ± {results[name]['test_auc_std']:.3f}")
         print(f"   Train AUC: {results[name]['train_auc_mean']:.3f} ± {results[name]['train_auc_std']:.3f}")
         print(f"   Overfitting: {results[name]['overfit_score']:.3f}")
         print(f"   Test Balanced Acc: {results[name]['test_ba_mean']:.3f} ± {results[name]['test_ba_std']:.3f}")
         
-        # Mostrar distribución de AUC
+
         auc_scores = results[name]['test_auc_all']
         print(f"   Distribución AUC: min={np.min(auc_scores):.3f}, "
               f"Q1={np.percentile(auc_scores, 25):.3f}, "
@@ -180,15 +179,15 @@ def analyze_feature_importance(X_features, y):
         print(f"   {i+1}. {name}: {score:.2f}")
 
 def main():
-    print("🔬 EVALUACIÓN HONESTA CON VALIDACIÓN CRUZADA")
+    print(" EVALUACIÓN CON VALIDACIÓN CRUZADA")
     print("=" * 60)
     print("Usando TODOS los datos disponibles (sin test set separado)")
     
-    # 1. Cargar todos los datos
+    
     X_all, y_all = load_all_data()
     
-    # 2. Extraer características mínimas
-    print("\n📐 Extrayendo características mínimas...")
+    
+    print("\n Extrayendo características mínimas...")
     extractor = MinimalFeatureExtractor()
     
     X_features = []
@@ -201,18 +200,17 @@ def main():
     X_features = np.array(X_features)
     print(f"   Características extraídas: {X_features.shape[1]}")
     
-    # 3. Analizar características
+    
     analyze_feature_importance(X_features, y_all)
     
-    # 4. Evaluación exhaustiva con CV
+    
     results = evaluate_models_cv_only(X_features, y_all, n_splits=10, n_repeats=5)
     
-    # 5. Resumen final
     print("\n" + "="*60)
     print("RESUMEN FINAL")
     print("="*60)
     
-    # Ordenar por AUC de test
+    # Podium
     sorted_models = sorted(results.items(), key=lambda x: x[1]['test_auc_mean'], reverse=True)
     
     print("\nRanking por AUC (validación cruzada):")
@@ -222,14 +220,13 @@ def main():
         print(f"   - Balanced Acc: {res['test_ba_mean']:.3f} ± {res['test_ba_std']:.3f}")
         print(f"   - Overfitting: {res['overfit_score']:.3f}")
     
-    # Mejor modelo
     best_model = sorted_models[0]
-    print(f"\n✅ Mejor modelo: {best_model[0]}")
+    print(f"\n Mejor modelo: {best_model[0]}")
     print(f"   AUC promedio: {best_model[1]['test_auc_mean']:.3f}")
     
-    # Análisis de variabilidad
-    print("\n📈 Análisis de estabilidad:")
-    for name, res in sorted_models[:2]:  # Top 2 modelos
+    #Analisis top 2 modelos
+    print("\n Análisis de estabilidad:")
+    for name, res in sorted_models[:2]:  
         auc_scores = res['test_auc_all']
         print(f"\n{name}:")
         print(f"   - Coeficiente de variación: {np.std(auc_scores)/np.mean(auc_scores):.3f}")

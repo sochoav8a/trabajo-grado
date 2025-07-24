@@ -71,19 +71,16 @@ class HologramPreprocessor:
         Returns:
             Imagen preprocesada
         """
-        # 1. Redimensionado inteligente
+        
         img_resized = self._smart_resize(img)
         
-        # 2. Mejoras específicas para hologramas
         if apply_hologram_enhancement:
             img_enhanced = self._hologram_enhancement(img_resized)
         else:
             img_enhanced = img_resized
             
-        # 3. Normalización
         img_normalized = self._normalize_image(img_enhanced)
         
-        # 4. Mejora de contraste adaptativo
         img_contrast = self._adaptive_contrast_enhancement(img_normalized)
         
         return img_contrast
@@ -101,7 +98,7 @@ class HologramPreprocessor:
         h, w = img.shape[:2]
         target_h, target_w = self.target_size
         
-        # Calcular ratio de aspecto
+        
         aspect_ratio = w / h
         target_aspect_ratio = target_w / target_h
         
@@ -117,7 +114,7 @@ class HologramPreprocessor:
         # Redimensionar manteniendo proporciones
         img_resized = cv2.resize(img, (new_w, new_h), interpolation=cv2.INTER_LANCZOS4)
         
-        # Rellenar para llegar al tamaño objetivo (padding)
+        #   (padding)
         if new_h < target_h or new_w < target_w:
             # Crear imagen con padding
             padded_img = np.zeros((target_h, target_w, img.shape[2]), dtype=img.dtype)
@@ -451,8 +448,8 @@ def main():
         apply_hologram_enhancement=True
     )
     
-    # Mostrar estadísticas
-    print("\n📊 ESTADÍSTICAS DEL DATASET PREPROCESADO:")
+    # Describe
+    print("\n ESTADÍSTICAS DEL DATASET PREPROCESADO:")
     print("=" * 50)
     stats = dataset['preprocessing_stats']
     print(f"Tamaño objetivo: {stats['target_size']}")
@@ -465,8 +462,8 @@ def main():
     for class_name, count in stats['test_distribution'].items():
         print(f"   {class_name}: {count} imágenes")
     
-    # Generar visualización de una imagen de ejemplo
-    sample_paths = dataset['train_paths'][:2]  # Tomar dos ejemplos
+    # Mostrar 2
+    sample_paths = dataset['train_paths'][:2] 
     for i, path in enumerate(sample_paths):
         save_path = f"preprocessing_example_{i+1}.png"
         preprocessor.visualize_preprocessing_effects(path, save_path)
@@ -475,7 +472,7 @@ def main():
     preprocessor.save_preprocessing_config()
     
     # Guardar dataset preprocesado
-    print("\n💾 Guardando dataset preprocesado...")
+    print("\n Guardando dataset preprocesado...")
     np.savez_compressed(
         'preprocessed_dataset.npz',
         X_train=dataset['X_train'],
